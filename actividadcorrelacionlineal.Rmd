@@ -1,0 +1,36 @@
+---
+title: "Actividad Correlación lineal"
+author: "Manuel Martín"
+date: "2024-03-11"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+### Actividad 1.
+Hablamos de una medida estadística empleada para analizar la relación existente entre dos variables de caracter cuantitativo. Sobre esta relación, la correlación lineal permite conocer su intensidad, desde 0 (no existe correlación) a 1 (correlación total) y también la dirección de esa correlación. Cuando es un número positivo hablamos de correlación directamente proprocional y si el número es negativo hablamos de correlación inversamente proporcional.
+
+### Actividad 2
+Hablamos de una correlación paramétrica porque se asume una distribución de Gauss o distribución normal y que la relación entre las variables analizadas es lineal. Unas asunciones sobre la distribución de los datos y naturaleza de la relación, que no se tienen que producir en las pruebas no paramétricas. 
+
+### Actividad 3
+```{r setup, include=TRUE}
+data <- data.frame(data)
+View(data)
+```
+Calculamos la correlación entre las variables de la tabla de datos. 
+```{r setup, include=TRUE}
+correlacion_datos <- cor(data)
+print(correlacion_datos)
+```
+
+### Actividad 4
+Calculamos los coeficientes de correlación de las variables y el nivel de significancia en un mismo gráfico.
+
+```{r setup, include=TRUE}
+cor.test(data$peso,data$altura)
+```
+
+
