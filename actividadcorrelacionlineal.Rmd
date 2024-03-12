@@ -9,6 +9,15 @@ output: html_document
 knitr::opts_chunk$set(echo = FALSE)
 ```
 
+
+```{r, echo = TRUE}
+library(readxl)
+data <- as.data.frame(read_excel("C:/Users/manueltristan/Documents/actividadcorrelacionlineal/data.xls"))
+View(data)
+print(data)
+```
+
+
 ### Actividad 1.
 Hablamos de una medida estadística empleada para analizar la relación existente entre dos variables de caracter cuantitativo. Sobre esta relación, la correlación lineal permite conocer su intensidad, desde 0 (no existe correlación) a 1 (correlación total) y también la dirección de esa correlación. Cuando es un número positivo hablamos de correlación directamente proprocional y si el número es negativo hablamos de correlación inversamente proporcional.
 
@@ -16,21 +25,123 @@ Hablamos de una medida estadística empleada para analizar la relación existent
 Hablamos de una correlación paramétrica porque se asume una distribución de Gauss o distribución normal y que la relación entre las variables analizadas es lineal. Unas asunciones sobre la distribución de los datos y naturaleza de la relación, que no se tienen que producir en las pruebas no paramétricas. 
 
 ### Actividad 3
-```{r setup, include=TRUE}
-data <- data.frame(data)
-View(data)
-```
 Calculamos la correlación entre las variables de la tabla de datos. 
+
 ```{r setup, include=TRUE}
 correlacion_datos <- cor(data)
 print(correlacion_datos)
 ```
 
+
 ### Actividad 4
 Calculamos los coeficientes de correlación de las variables y el nivel de significancia en un mismo gráfico.
 
 ```{r setup, include=TRUE}
-cor.test(data$peso,data$altura)
+panel.cor <- function(x, y, digits = 2, prefix = "", cex.cor, ...) {
+  usr <- par("usr")
+  on.exit(par(usr))
+  par(usr = c(0, 1, 0 ,1))
+  Cor <- abs(cor(x, y)) 
+  txt <- paste0(prefix, format(c(Cor, 0.123456789), digits = digits)[1])
+  if(missing(cex.cor)) {
+    cex.cor <- 0.4 / strwidth(txt)
+  }
+  text(0.5, 0.5, txt,
+       cex = 1 + cex.cor*Cor)
+}
+#Dibujamos la matriz de correlación
+pairs(data,
+      upper.panel = panel.cor, # Panel de correlación
+      lower.panel = panel.smooth)
 ```
 
+En el gráfico se observan las correlaciones existentes entre las variables. Mostrando que no existe una correlación entre las variables analizadas, al menos no una correlación lineal. 
 
+### Ejercicio 5
+
+```{r setup, include=TRUE}
+matriz <- correlation(data)
+matriz
+```
+Los resultados obtenidos muestran un coeficiente de correlación entre las variables igual o inferior a 0.15. También en todos los casos el p-value o nivel de significancia es superior a 0.05, lo que significa que no tenemos suficiente evidencia para rechazar que la correlación sea resultado del azar y no sea significativa. A esto debemos incluir que el intervalo de confianza en los tres casos incluye el 0. Por lo que podemos afirmar que no hay una correlación significativa entre las variables en los datos analizados. 
+
+### Ejercicio 6 
+
+```{r, echo = TRUE}
+library(ggpubr)
+library(ggplot2)
+ggscatter(data, x = "altura", y = "peso",
+          add = "reg.line", conf.int = TRUE,
+          cor.coef = TRUE, cor.method = "pearson",
+          xlab = "Altura piezas (mm)", ylab = "Peso piezas (mg)")
+```
+
+### Ejercicio 7
+```{r, echo = TRUE}
+corrplot(cor(data))
+```
+
+### Ejercicio 8
+a) Creamos los dos vectores para un data frame: 
+
+```{r, echo = TRUE}
+distancia <- c( 1.1,100.2,90.3,5.4,57.5,6.6,34.7,65.8,57.9,86.1)
+n_piezas <- c(110,2,6,98,40,94,31,5,8,10)
+datos_2 <- data.frame(distancia, n_piezas)
+print(datos_2)
+```
+
+b) Calculamos el coeficiente de correlación: 
+
+```{r, echo = TRUE}
+correlacion_datos_2 <- cor(datos_2)
+print(correlacion_datos_2)
+```
+
+c) Calculamos el nivel de significancia:
+
+```{r, echo = TRUE}
+significancia_datos_2 <- cor.test(datos_2$distancia, datos_2$n_piezas)$p.value
+print(significancia_datos_2)
+```
+
+d) Calculamos el Intervalo de confianza al 95%:
+
+```{r, echo = TRUE}
+intervaloconfianza_datos_2 <- cor.test(datos_2$distancia, datos_2$n_piezas)$conf.int
+print(intervaloconfianza_datos_2)
+```
+e) Ambas variables presentan una intensidad de 0.9249824, cercana a 1 y una dirección negativa, que significa que la correlación es inversa, cuando aumenta una de las variables la otra disminuye.
+
+f) La relación es significativa estadisticamente hablando porque el p_value o nivel de significancia es inferior al 0.05. Los 0.0001264706 obtenidos justifican pensar que la correlación obtenida no es resultado del azar y que es significativa.
+
+g) Aunque el nivel de significancia permita afirmar que estamos ante una relación significativa, trabajar con 10 muestras suele ser escaso y por lo general se suele recomendar un tamaño muestral mayor (30-100) sería más apropiado. 
+
+### Ejercicio 9
+
+La diferencia entre una relación lineal y una monótona es que la relación lineal se puede representar mediante una línea recta en un gráfico de dispersión mientras que la relación monótona no tiene porque ser representada mediante una línea recta, sino que la dirección de la relación sea constante. Lo vemos con un ejemplo:
+
+# Ejemplo de relación lineal
+```{r, echo = TRUE}
+x <- 1:100
+y <- 2*x + rnorm(10)
+plot(x, y, main = "Relación Lineal", xlab = "X", ylab = "Y")
+```
+# Ejemplo de relación monótona
+```{r, echo = TRUE}
+x <- 1:100
+y <- x^2 + rnorm(10)
+plot(x, y, main = "Relación Monótona", xlab = "X", ylab = "Y")
+```
+
+### Ejercicio 10 
+
+Para las variables con una relación monótona podemos emplear la correlación de Spearman o la prueba de correlación de Kendall.
+
+# Ejemplo de prueba de correlación de Spearman
+```{r, echo = TRUE}
+x <- 1:100
+y <- x^2 + rnorm(10)
+correlation_spearman <- cor.test(x, y, method = "spearman")
+print(correlation_spearman)
+```
