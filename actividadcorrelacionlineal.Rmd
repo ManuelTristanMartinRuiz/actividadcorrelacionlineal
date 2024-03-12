@@ -2,11 +2,13 @@
 title: "Actividad Correlación lineal"
 author: "Manuel Martín"
 date: "2024-03-11"
-output: html_document
+output:
+  html_document: default
+  word_document: default
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE)
+```{r, echo = FALSE}
+knitr::opts_chunk$set(echo = TRUE)
 ```
 
 
@@ -27,7 +29,7 @@ Hablamos de una correlación paramétrica porque se asume una distribución de G
 ### Actividad 3
 Calculamos la correlación entre las variables de la tabla de datos. 
 
-```{r setup, include=TRUE}
+```{r, echo = TRUE}
 correlacion_datos <- cor(data)
 print(correlacion_datos)
 ```
@@ -36,7 +38,7 @@ print(correlacion_datos)
 ### Actividad 4
 Calculamos los coeficientes de correlación de las variables y el nivel de significancia en un mismo gráfico.
 
-```{r setup, include=TRUE}
+```{r, echo = TRUE}
 panel.cor <- function(x, y, digits = 2, prefix = "", cex.cor, ...) {
   usr <- par("usr")
   on.exit(par(usr))
@@ -59,7 +61,8 @@ En el gráfico se observan las correlaciones existentes entre las variables. Mos
 
 ### Ejercicio 5
 
-```{r setup, include=TRUE}
+```{r, echo = TRUE}
+library(correlation)
 matriz <- correlation(data)
 matriz
 ```
@@ -78,6 +81,7 @@ ggscatter(data, x = "altura", y = "peso",
 
 ### Ejercicio 7
 ```{r, echo = TRUE}
+library(corrplot)
 corrplot(cor(data))
 ```
 
@@ -121,13 +125,13 @@ g) Aunque el nivel de significancia permita afirmar que estamos ante una relaci�
 
 La diferencia entre una relación lineal y una monótona es que la relación lineal se puede representar mediante una línea recta en un gráfico de dispersión mientras que la relación monótona no tiene porque ser representada mediante una línea recta, sino que la dirección de la relación sea constante. Lo vemos con un ejemplo:
 
-# Ejemplo de relación lineal
+##### Ejemplo de relación lineal
 ```{r, echo = TRUE}
 x <- 1:100
 y <- 2*x + rnorm(10)
 plot(x, y, main = "Relación Lineal", xlab = "X", ylab = "Y")
 ```
-# Ejemplo de relación monótona
+##### Ejemplo de relación monótona
 ```{r, echo = TRUE}
 x <- 1:100
 y <- x^2 + rnorm(10)
@@ -138,7 +142,7 @@ plot(x, y, main = "Relación Monótona", xlab = "X", ylab = "Y")
 
 Para las variables con una relación monótona podemos emplear la correlación de Spearman o la prueba de correlación de Kendall.
 
-# Ejemplo de prueba de correlación de Spearman
+##### Ejemplo de prueba de correlación de Spearman
 ```{r, echo = TRUE}
 x <- 1:100
 y <- x^2 + rnorm(10)
